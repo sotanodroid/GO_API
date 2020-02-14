@@ -16,12 +16,17 @@ docker-compose up
 ```
 
 ```bash
+# Build migrations container
+docker build -t migrator -f migrator/Dockerfile .
+
 # Run migrations
-docker run -v { path_to_migration_folder }:/migrations --network host migrate/migrate -path=/migrations/ -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
+docker run --network host migrator:latest -path=/migrations/ -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
 ```
 
 ``` bash
+# Build app
 go build github.com/sotanodroid/GO_API/cmd/goapi
+# Run app
 ./goapi
 ```
 
