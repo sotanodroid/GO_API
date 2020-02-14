@@ -1,7 +1,5 @@
 # Simple GO Lang REST API
 
-### TODO: Apply go module structure, add PostgreSQL + migrations
-
 > Simple RESTful API to create, read, update and delete books. No database implementation yet
 
 ## Quick Start
@@ -15,6 +13,11 @@ cp .env.example .env
 ```bash
 # Run Docker-compose with PSQL
 docker-compose up
+```
+
+```bash
+# Run migrations
+docker run -v { path_to_migration_folder }:/migrations --network host migrate/migrate -path=/migrations/ -database "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
 ```
 
 ``` bash
