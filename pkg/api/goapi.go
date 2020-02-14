@@ -5,26 +5,14 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/sotanodroid/GO_API/pkg/db"
 )
 
-// Book Struct
-type Book struct {
-	ID     string  `json:"id"`
-	Isbn   string  `json:"isbn"`
-	Title  string  `json:"title"`
-	Author *Author `json:"author"`
-}
-
-// Author Struct
-type Author struct {
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname"`
-}
-
-var books []Book
+var books []db.Book
 
 func getAllBooks(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-type", "Application/json")
@@ -42,12 +30,12 @@ func getBook(writer http.ResponseWriter, request *http.Request) {
 		}
 	}
 
-	json.NewEncoder(writer).Encode(&Book{})
+	json.NewEncoder(writer).Encode(&db.Book{})
 }
 
 func createBook(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-type", "Application/json")
-	var book Book
+	var book db.Book
 	_ = json.NewDecoder(request.Body).Decode(&book)
 	book.ID = strconv.Itoa(rand.Intn(10000)) // Mock ID
 	books = append(books, book)
@@ -61,7 +49,7 @@ func updateBook(writer http.ResponseWriter, request *http.Request) {
 	for index, item := range books {
 		if item.ID == params["id"] {
 			books = append(books[:index], books[index+1:]...)
-			var book Book
+			var book db.Book
 			_ = json.NewDecoder(request.Body).Decode(&book)
 			book.ID = strconv.Itoa(rand.Intn(10000)) // Mock ID
 			books = append(books, book)
@@ -89,10 +77,10 @@ func RunServer() {
 	router := mux.NewRouter()
 
 	// Mock data
-	books = append(books, Book{ID: "1", Isbn: "153223", Title: "Book One",
-		Author: &Author{Firstname: "John", Lastname: "Doe"}})
-	books = append(books, Book{ID: "2", Isbn: "153235", Title: "Book Two",
-		Author: &Author{Firstname: "Steve", Lastname: "Smith"}})
+	books = append(books, db.Book{ID: "1", Isbn: "153223", Title: "Book One",
+		Author: &db.Author{Firstname: "John", Lastname: "Doe"}})
+	books = append(books, db.Book{ID: "2", Isbn: "153235", Title: "Book Two",
+		Author: &db.Author{Firstname: "Steve", Lastname: "Smith"}})
 
 	//Route handlers
 	router.HandleFunc("/api/books", getAllBooks).Methods("GET")
@@ -101,5 +89,5 @@ func RunServer() {
 	router.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
 	router.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), router))
 }

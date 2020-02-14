@@ -8,8 +8,13 @@
 
 
 ``` bash
-# Install mux router
-go get -u github.com/gorilla/mux
+# Make .env file
+cp .env.example .env
+```
+
+```bash
+# Run Docker-compose with PSQL
+docker-compose up
 ```
 
 ``` bash

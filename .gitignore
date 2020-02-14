@@ -30,4 +30,6 @@
 /vendor/
 /Godeps/
 
+
+.env
 # End of https://www.gitignore
