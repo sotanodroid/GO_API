@@ -1,5 +1,7 @@
 # Simple GO Lang REST API
 
+### TODO: Apply go module structure, add PostgreSQL + migrations
+
 > Simple RESTful API to create, read, update and delete books. No database implementation yet
 
 ## Quick Start
