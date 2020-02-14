@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Book Struct (Model)
+// Book Struct
 type Book struct {
 	ID     string  `json:"id"`
 	Isbn   string  `json:"isbn"`
@@ -83,7 +83,8 @@ func deleteBook(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func main() {
+// RunServer handles main routing for server
+func RunServer() {
 	// Init router
 	router := mux.NewRouter()
 

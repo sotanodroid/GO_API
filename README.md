@@ -13,9 +13,11 @@ go get -u github.com/gorilla/mux
 ```
 
 ``` bash
-go build
-./go_restapi
+go build github.com/sotanodroid/GO_API/cmd/goapi
+./goapi
 ```
+
+Server would be awailable on port 8000
 
 ## Endpoints
 
