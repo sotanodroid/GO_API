@@ -1,6 +1,6 @@
-# Simple GO Lang REST API
+# Simple GOLang REST API
 
-> Simple RESTful API to create, read, update and delete books. No database implementation yet
+> Simple RESTful API to create, read, update and delete books.
 
 ## Quick Start
 
