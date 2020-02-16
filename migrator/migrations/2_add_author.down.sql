@@ -1,1 +1,1 @@
-DROP TABLE Author;
+DROP TABLE IF EXISTS goapi.authors;

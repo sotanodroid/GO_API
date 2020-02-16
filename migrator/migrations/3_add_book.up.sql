@@ -1,7 +1,25 @@
-CREATE TABLE IF NOT EXISTS goapi.Book
+CREATE TABLE IF NOT EXISTS goapi.books
 (
     id serial NOT NULL PRIMARY KEY,
-    Isbn VARCHAR (50),
-    Title VARCHAR (50),
-    Author INT REFERENCES goapi.Author(id) ON DELETE CASCADE
+    isbn VARCHAR (50),
+    title VARCHAR (50),
+    author INT REFERENCES goapi.authors(id) ON DELETE CASCADE
+);
+
+INSERT INTO goapi.books
+(
+    isbn,
+    title,
+    author
+)
+VALUES
+(
+    '153223',
+    'Book_One',
+    (SELECT id FROM goapi.authors WHERE firstname='John' AND lastname='Doe' LIMIT 1)
+),
+(
+    '153235',
+    'Book Two',
+    (SELECT id FROM goapi.authors WHERE firstname='Steve' AND lastname='Smith' LIMIT 1)
 );

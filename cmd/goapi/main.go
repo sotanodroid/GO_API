@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
 	"github.com/sotanodroid/GO_API/pkg/api"
+	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
 func init() {
@@ -23,11 +23,7 @@ func main() {
 
 	log.Println("Starting App...")
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
-	if err != nil {
-		log.Fatal("Error connecting to database", err)
-	}
-	defer conn.Close(context.Background())
+	models.InitDB(os.Getenv("DB_URL"))
 
 	go api.RunServer()
 

@@ -1,1 +1,1 @@
-DROP TABLE Book;
+DROP TABLE IF EXISTS goapi.books;

@@ -1,6 +1,21 @@
-CREATE TABLE IF NOT EXISTS goapi.Author
+CREATE TABLE IF NOT EXISTS goapi.authors
 (
     id serial NOT NULL PRIMARY KEY,
-    Firstname VARCHAR (50),
-    Lastname VARCHAR (50)
+    firstname VARCHAR (50),
+    lastname VARCHAR (50)
+);
+
+INSERT INTO goapi.authors
+(
+    firstname,
+    lastname
+)
+VALUES
+(
+    'John',
+    'Doe'
+),
+(
+    'Steve',
+    'Smith'
 );
