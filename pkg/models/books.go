@@ -29,19 +29,14 @@ type Author struct {
 //AllBooks Select all books from db
 func AllBooks() ([]*Book, error) {
 	query := "SELECT * FROM goapi.books;"
-	conn, err := pool.Acquire(context.Background())
+
+	rows, err := db.Query(context.Background(), query)
 
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := conn.Query(context.Background(), query)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer conn.Release()
+	defer rows.Close()
 
 	bks := make([]*Book, 0)
 	for rows.Next() {
@@ -80,23 +75,14 @@ func CreateBook(book *Book) error {
 			$3
 		)
 		RETURNING id;`
-	conn, err := pool.Acquire(context.Background())
 
-	if err != nil {
-		return err
-	}
-	defer conn.Release()
-
-	row := conn.QueryRow(
+	_, err := db.Exec(
 		context.Background(),
 		query,
 		book.Isbn,
 		book.Title,
 		book.Author.ID,
 	)
-
-	var id uint64
-	err = row.Scan(&id)
 
 	if err != nil {
 		return errors.New("Error inserting data into Books")

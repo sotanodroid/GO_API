@@ -4,17 +4,17 @@ import (
 	"context"
 	"log"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v4"
 )
 
-var pool *pgxpool.Pool
+var db *pgx.Conn
 
 //InitDB initialize db connection
 func InitDB(dataSourceName string) {
 	var err error
 	ctx := context.Background()
 
-	pool, err = pgxpool.Connect(ctx, dataSourceName)
+	db, err = pgx.Connect(ctx, dataSourceName)
 	if err != nil {
 		log.Fatal("Error connecting to database", err)
 	}
