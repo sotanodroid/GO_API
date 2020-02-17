@@ -21,10 +21,10 @@ func getAllBooks(writer http.ResponseWriter, request *http.Request) {
 
 func createBook(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-type", "Application/json")
-	var book models.Book
+	book := new(models.Book)
 	_ = json.NewDecoder(request.Body).Decode(&book)
 
-	if err := models.CreateBook(&book); err != nil {
+	if err := models.CreateBook(book); err != nil {
 		log.Fatalln("Error in CreateBook: ", err)
 	}
 
