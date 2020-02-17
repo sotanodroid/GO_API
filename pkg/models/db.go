@@ -80,7 +80,14 @@ func CreateBook(book *Book) error {
 		(
 			$1,
 			$2,
-			$3
+			(
+				SELECT id
+				FROM goapi.authors
+				WHERE firstname = $3
+				AND lastname = $4
+				GROUP BY id
+				LIMIT 1
+			) 
 		);`
 
 	commandTag, err := db.Exec(
@@ -88,7 +95,8 @@ func CreateBook(book *Book) error {
 		query,
 		&book.Isbn,
 		&book.Title,
-		&book.Author.ID,
+		&book.Author.Firstname,
+		&book.Author.Lastname,
 	)
 
 	if err != nil {

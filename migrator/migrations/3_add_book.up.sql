@@ -16,10 +16,10 @@ VALUES
 (
     '153223',
     'Book_One',
-    (SELECT id FROM goapi.authors WHERE firstname='John' AND lastname='Doe' LIMIT 1)
+    (SELECT id FROM goapi.authors WHERE firstname='John' AND lastname='Doe' GROUP BY id LIMIT 1)
 ),
 (
     '153235',
     'Book Two',
-    (SELECT id FROM goapi.authors WHERE firstname='Steve' AND lastname='Smith' LIMIT 1)
+    (SELECT id FROM goapi.authors WHERE firstname='Steve' AND lastname='Smith' GROUP BY id LIMIT 1)
 );
