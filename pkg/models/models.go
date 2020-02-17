@@ -6,6 +6,7 @@ type Book struct {
 	Isbn   string `json:"isbn"`
 	Title  string `json:"title"`
 	Author Author `json:"author"`
+	// Author *Author `json:"author"`
 }
 
 // Author model Struct
