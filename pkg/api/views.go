@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
@@ -13,7 +14,7 @@ func getAllBooks(writer http.ResponseWriter, request *http.Request) {
 	books, err := models.AllBooks()
 
 	if err != nil {
-		log.Fatalln("Error in getAllBooks: ", err)
+		log.Println("Error in getAllBooks: ", err)
 	}
 
 	json.NewEncoder(writer).Encode(books)
@@ -25,23 +26,25 @@ func createBook(writer http.ResponseWriter, request *http.Request) {
 	_ = json.NewDecoder(request.Body).Decode(&book)
 
 	if err := models.CreateBook(book); err != nil {
-		log.Fatalln("Error in CreateBook: ", err)
+		log.Println("Error in CreateBook: ", err)
 	}
 
 	json.NewEncoder(writer).Encode(book)
 
 }
 
-// func getBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
+func getBook(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Content-type", "Application/json")
+	params := mux.Vars(request)
 
-// 	for _, item := range books {
-// 		if item.ID == params["id"] {
-// 			json.NewEncoder(writer).Encode(item)
-// 			return
-// 		}
-// 	}
+	book, err := models.GetBook(params["id"])
+
+	if err != nil {
+		log.Println("Error in GetBook: ", err)
+	}
+
+	json.NewEncoder(writer).Encode(book)
+}
 
 // 	json.NewEncoder(writer).Encode(&models.Book{})
 // }

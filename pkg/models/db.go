@@ -17,13 +17,12 @@ func InitDB(dataSourceName string) {
 
 	db, err = pgx.Connect(ctx, dataSourceName)
 	if err != nil {
-		log.Fatal("Error connecting to database", err)
+		log.Println("Error connecting to database", err)
 	}
 
 }
 
 // TODO
-// 	getBook() (*Book, error)
 // 	createBook(book *Book) error
 // 	updateBook(book *Book) error
 // 	deleteBook(book *Book) error
@@ -71,11 +70,7 @@ func AllBooks() ([]Book, error) {
 func CreateBook(book *Book) error {
 	const query = `
 		INSERT INTO goapi.books 
-		(
-			isbn,
-			title,
-			author
-		) 
+		(isbn, title, author) 
 		VALUES
 		(
 			$1,
@@ -86,7 +81,7 @@ func CreateBook(book *Book) error {
 				WHERE firstname = $3
 				AND lastname = $4
 				LIMIT 1
-			) 
+			)
 		);`
 
 	commandTag, err := db.Exec(
@@ -105,4 +100,42 @@ func CreateBook(book *Book) error {
 		return errors.New("Error Executing INSERT on CreateBook")
 	}
 	return nil
+}
+
+//GetBook gets single book
+func GetBook(id string) (*Book, error) {
+	const query = `
+		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
+		FROM goapi.books as b
+		JOIN goapi.authors as a
+		ON b.author = a.id
+		WHERE b.id = $1;
+		`
+	rows, err := db.Query(context.Background(), query, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	bk := new(Book)
+	for rows.Next() {
+		if err := rows.Scan(
+			&bk.ID,
+			&bk.Isbn,
+			&bk.Title,
+			&bk.Author.ID,
+			&bk.Author.Firstname,
+			&bk.Author.Lastname,
+		); err != nil {
+			return nil, err
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return bk, nil
 }
