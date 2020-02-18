@@ -20,7 +20,7 @@ docker-compose up
 docker build -t migrator -f migrator/Dockerfile .
 
 # Run migrations
-docker run --network host migrator:latest -path=/migrations/ -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
+make migrate
 ```
 
 ``` bash
@@ -42,25 +42,30 @@ GET api/books
 ``` bash
 GET api/books/{id}
 ```
-
+TODO
+<!-- 
 ### Delete Book
 ``` bash
 DELETE api/books/{id}
-```
+``` -->
 
 ### Create Book
 ``` bash
 POST api/books
 
 # Request sample
-# {
-#   "isbn":"4545454",
-#   "title":"Book Three",
-#   "author":{"firstname":"Harry",  "lastname":"White"}
-# }
+{
+  "isbn":"4545454",
+  "title":"Book Three",
+  "author": {
+      "firstname":"Harry",
+      "lastname":"White"
+    }
+}
 ```
 
-### Update Book
+TODO
+<!-- ### Update Book
 ``` bash
 PUT api/books/{id}
 
@@ -71,4 +76,4 @@ PUT api/books/{id}
 #   "author":{"firstname":"Harry",  "lastname":"White"}
 # }
 
-```
+``` -->
