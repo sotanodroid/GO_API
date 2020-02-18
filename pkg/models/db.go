@@ -85,7 +85,6 @@ func CreateBook(book *Book) error {
 				FROM goapi.authors
 				WHERE firstname = $3
 				AND lastname = $4
-				GROUP BY id
 				LIMIT 1
 			) 
 		);`
