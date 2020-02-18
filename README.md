@@ -37,11 +37,50 @@ Server would be awailable on port 8000
 ### Get All Books
 ``` bash
 GET api/books
+
+# Response
+
+[
+    {
+        "id": 1,
+        "isbn": "153223",
+        "title": "Book_One",
+        "author": {
+            "id": 1,
+            "firstname": "John",
+            "lastname": "Doe"
+        }
+    },
+    {
+        "id": 2,
+        "isbn": "153235",
+        "title": "Book Two",
+        "author": {
+            "id": 2,
+            "firstname": "Steve",
+            "lastname": "Smith"
+        }
+    }
+]
 ```
 ### Get Single Book
 ``` bash
 GET api/books/{id}
+
+# Response
+{
+    "id": 1,
+    "isbn": "153223",
+    "title": "Book_One",
+    "author": {
+        "id": 1,
+        "firstname": "John",
+        "lastname": "Doe"
+    }
+}
 ```
+
+
 TODO
 <!-- 
 ### Delete Book
@@ -63,6 +102,7 @@ POST api/books
     }
 }
 ```
+
 
 TODO
 <!-- ### Update Book
