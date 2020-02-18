@@ -111,31 +111,20 @@ func GetBook(id string) (*Book, error) {
 		ON b.author = a.id
 		WHERE b.id = $1;
 		`
-	rows, err := db.Query(context.Background(), query, id)
+	rows := db.QueryRow(context.Background(), query, id)
 
-	if err != nil {
+	var bk Book
+
+	if err := rows.Scan(
+		&bk.ID,
+		&bk.Isbn,
+		&bk.Title,
+		&bk.Author.ID,
+		&bk.Author.Firstname,
+		&bk.Author.Lastname,
+	); err != nil {
 		return nil, err
 	}
 
-	defer rows.Close()
-
-	bk := new(Book)
-	for rows.Next() {
-		if err := rows.Scan(
-			&bk.ID,
-			&bk.Isbn,
-			&bk.Title,
-			&bk.Author.ID,
-			&bk.Author.Firstname,
-			&bk.Author.Lastname,
-		); err != nil {
-			return nil, err
-		}
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return bk, nil
+	return &bk, nil
 }
