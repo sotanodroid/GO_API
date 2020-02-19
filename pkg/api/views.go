@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/sotanodroid/GO_API/pkg/models"
@@ -46,34 +47,22 @@ func getBook(writer http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(writer).Encode(book)
 }
 
-// 	json.NewEncoder(writer).Encode(&models.Book{})
-// }
+func updateBook(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Content-type", "Application/json")
+	params := mux.Vars(request)
+	book := new(models.Book)
 
-// func updateBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
+	_ = json.NewDecoder(request.Body).Decode(&book)
+	book.ID, _ = strconv.Atoi(params["id"])
 
-// 	for index, item := range books {
-// 		if item.ID == params["id"] {
-// 			books = append(books[:index], books[index+1:]...)
-// 			var book models.Book
-// 			_ = json.NewDecoder(request.Body).Decode(&book)
-// 			book.ID = strconv.Itoa(rand.Intn(10000)) // Mock ID
-// 			books = append(books, book)
-// 			json.NewEncoder(writer).Encode(book)
-// 			return
-// 		}
-// 	}
-// }
+	if err := models.UpdateBook(book); err != nil {
+		log.Println("Error in updateBook: ", err)
+	}
+
+	json.NewEncoder(writer).Encode(book)
+}
 
 // func deleteBook(writer http.ResponseWriter, request *http.Request) {
 // 	writer.Header().Set("Content-type", "Application/json")
 // 	params := mux.Vars(request)
-
-// 	for index, item := range books {
-// 		if item.ID == params["id"] {
-// 			books = append(books[:index], books[index+1:]...)
-// 			break
-// 		}
-// 	}
 // }

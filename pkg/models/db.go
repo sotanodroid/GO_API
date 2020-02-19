@@ -23,8 +23,6 @@ func InitDB(dataSourceName string) {
 }
 
 // TODO
-// 	createBook(book *Book) error
-// 	updateBook(book *Book) error
 // 	deleteBook(book *Book) error
 
 //AllBooks Select all books from db
@@ -34,7 +32,7 @@ func AllBooks() ([]Book, error) {
 		FROM goapi.books as b
 		JOIN goapi.authors as a
 		ON b.author = a.id;
-		`
+	`
 	rows, err := db.Query(context.Background(), query)
 
 	if err != nil {
@@ -82,8 +80,8 @@ func CreateBook(book *Book) error {
 				AND lastname = $4
 				LIMIT 1
 			)
-		);`
-
+		);
+	`
 	commandTag, err := db.Exec(
 		context.Background(),
 		query,
@@ -110,7 +108,7 @@ func GetBook(id string) (*Book, error) {
 		JOIN goapi.authors as a
 		ON b.author = a.id
 		WHERE b.id = $1;
-		`
+	`
 	rows := db.QueryRow(context.Background(), query, id)
 
 	var bk Book
@@ -127,4 +125,27 @@ func GetBook(id string) (*Book, error) {
 	}
 
 	return &bk, nil
+}
+
+// UpdateBook updates book by it's ID
+func UpdateBook(book *Book) error {
+	const query = `
+		UPDATE goapi.books
+		SET isbn = $2, title = $3
+		WHERE
+		id = $1;
+	`
+	_, err := db.Exec(
+		context.Background(),
+		query,
+		&book.ID,
+		&book.Isbn,
+		&book.Title,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

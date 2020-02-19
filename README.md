@@ -103,17 +103,14 @@ POST api/books
 }
 ```
 
-
-TODO
-<!-- ### Update Book
+### Update Book
 ``` bash
 PUT api/books/{id}
 
 # Request sample
-# {
-#   "isbn":"4545454",
-#   "title":"Updated Title",
-#   "author":{"firstname":"Harry",  "lastname":"White"}
-# }
+{
+  "isbn":"4545454",
+  "title":"Updated Title"
+}
 
-``` -->
+```
