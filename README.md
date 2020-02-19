@@ -80,13 +80,13 @@ GET api/books/{id}
 }
 ```
 
-
-TODO
-<!-- 
 ### Delete Book
 ``` bash
 DELETE api/books/{id}
-``` -->
+
+Response:
+"Deleted"
+```
 
 ### Create Book
 ``` bash

@@ -62,7 +62,13 @@ func updateBook(writer http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(writer).Encode(book)
 }
 
-// func deleteBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
-// }
+func deleteBook(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Content-type", "Application/json")
+	params := mux.Vars(request)
+
+	if err := models.DeleteBook(params["id"]); err != nil {
+		log.Println("Error in GetBook: ", err)
+	}
+
+	writer.Write([]byte("Deleted"))
+}
