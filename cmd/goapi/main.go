@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/joho/godotenv"
 	"github.com/sotanodroid/GO_API/pkg/api"
@@ -15,13 +17,21 @@ import (
 
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("Error loading .env file")
+		log.Error("Error loading .env file")
 	}
+
+	logLevel, err := strconv.Atoi(os.Getenv("LOG_LEVEL"))
+
+	if err != nil {
+		log.Error(err)
+	}
+
+	log.SetLevel(log.Level(logLevel))
 }
 
 func main() {
 
-	log.Println("Starting App...")
+	log.Info("Starting App...")
 
 	models.InitDB(os.Getenv("DB_URL"))
 
@@ -32,12 +42,12 @@ func main() {
 
 	<-interrupt
 
-	log.Println("App stopping...")
+	log.Info("App stopping...")
 
 	_, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
 
 	defer cancelFunc()
 
-	log.Println("App stopped")
+	log.Info("App stopped")
 
 }

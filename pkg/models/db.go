@@ -3,7 +3,8 @@ package models
 import (
 	"context"
 	"errors"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgx/v4"
 )
@@ -17,7 +18,7 @@ func InitDB(dataSourceName string) {
 
 	db, err = pgx.Connect(ctx, dataSourceName)
 	if err != nil {
-		log.Println("Error connecting to database", err)
+		log.Error("Error connecting to database", err)
 	}
 
 }

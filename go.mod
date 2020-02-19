@@ -6,5 +6,6 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/jackc/pgx/v4 v4.4.0
 	github.com/joho/godotenv v1.3.0
+	github.com/sirupsen/logrus v1.4.2
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
