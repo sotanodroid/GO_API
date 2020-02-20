@@ -107,11 +107,11 @@ func GetBook(id string) (*Book, error) {
 		ON b.author = a.id
 		WHERE b.id = $1;`
 
-	rows := db.QueryRow(context.Background(), query, id)
+	row := db.QueryRow(context.Background(), query, id)
 
 	var bk Book
 
-	if err := rows.Scan(
+	if err := row.Scan(
 		&bk.ID,
 		&bk.Isbn,
 		&bk.Title,
