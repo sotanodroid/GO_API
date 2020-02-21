@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -20,8 +22,26 @@ func TestGetRequest(t *testing.T) {
 
 	getAllBooks(w, r)
 
-	// TODO assert output
 	assert.Equal(t, http.StatusOK, w.Code)
+
 }
 
-// TODO Test for all endpoints
+func TestCreateBook(t *testing.T) {
+	book := models.Book{
+		Isbn:  "123459",
+		Title: "test Book",
+		Author: models.Author{
+			Firstname: "John",
+			Lastname:  "Doe",
+		},
+	}
+
+	requestByte, _ := json.Marshal(book)
+
+	r, _ := http.NewRequest("POST", "/api/books", bytes.NewReader(requestByte))
+	w := httptest.NewRecorder()
+
+	createBook(w, r)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+}

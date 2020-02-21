@@ -114,3 +114,10 @@ PUT api/books/{id}
 }
 
 ```
+
+#### Tests:
+
+Start DataBase in Docker container, run migrations.
+``` bash
+go test ./... -v
+```
