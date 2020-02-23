@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	models.InitDB("postgres://postgres:postgres@localhost:5432/postgres")
+	models.InitDB("postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 }
 
 func TestGetRequest(t *testing.T) {
@@ -43,5 +43,9 @@ func TestCreateBook(t *testing.T) {
 
 	createBook(w, r)
 
+	respBook := new(models.Book)
+	_ = json.NewDecoder(w.Body).Decode(&respBook)
+
 	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, book, *respBook)
 }
