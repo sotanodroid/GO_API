@@ -2,52 +2,79 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
-	"time"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sotanodroid/GO_API/pkg/models"
+
+	"github.com/sotanodroid/GO_API/pkg/api"
+
+	"github.com/go-kit/kit/log/level"
+	"github.com/jackc/pgx/v4"
+
+	"github.com/go-kit/kit/log"
 
 	"github.com/joho/godotenv"
-	"github.com/sotanodroid/GO_API/pkg/api"
-	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
 func init() {
+	var logger log.Logger
 	if err := godotenv.Load(); err != nil {
-		log.Error("Error loading .env file")
+		level.Info(logger).Log(err)
 	}
-
-	logLevel, err := strconv.Atoi(os.Getenv("LOG_LEVEL"))
-
-	if err != nil {
-		log.Error(err)
-	}
-
-	log.SetLevel(log.Level(logLevel))
 }
 
 func main() {
+	var logger log.Logger
+	{
+		logger = log.NewLogfmtLogger(os.Stderr)
+		logger = log.NewSyncLogger(logger)
+		logger = log.With(
+			logger, "service", "bookStore",
+			"time", log.DefaultTimestampUTC,
+			"caller", log.DefaultCaller,
+		)
+	}
 
-	log.Info("Starting App...")
+	level.Info(logger).Log("msg", "Starting App...")
+	defer level.Info(logger).Log("msg", "App stopped")
 
-	models.InitDB(os.Getenv("DB_URL"))
+	var dbSource = os.Getenv("DB_URL")
+	var db *pgx.Conn
+	ctx := context.Background()
+	{
+		var err error
 
-	go api.RunServer()
+		db, err = pgx.Connect(ctx, dbSource)
+		if err != nil {
+			level.Error(logger).Log("exit", err)
+			os.Exit(-1)
+		}
+	}
 
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+	var srv api.Service
+	{
+		repository := models.NewRepo(db, logger)
+		srv = api.NewService(repository, logger)
+	}
 
-	<-interrupt
+	errs := make(chan error)
 
-	log.Info("App stopping...")
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errs <- fmt.Errorf("%s", <-c)
+	}()
 
-	_, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
+	endpoints := api.MakeEndpoints(srv)
 
-	defer cancelFunc()
+	go func() {
+		handler := api.NewHTTPServer(ctx, endpoints)
+		errs <- http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+	}()
 
-	log.Info("App stopped")
-
+	level.Error(logger).Log("exit", <-errs)
 }

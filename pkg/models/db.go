@@ -4,34 +4,33 @@ import (
 	"context"
 	"errors"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/go-kit/kit/log"
 
 	"github.com/jackc/pgx/v4"
 )
 
-var db *pgx.Conn
+type repo struct {
+	db     *pgx.Conn
+	logger log.Logger
+}
 
-//InitDB initialize db connection
-func InitDB(dataSourceName string) {
-	var err error
-	ctx := context.Background()
-
-	db, err = pgx.Connect(ctx, dataSourceName)
-	if err != nil {
-		log.Error("Error connecting to database", err)
+// NewRepo creates new repo
+func NewRepo(db *pgx.Conn, logger log.Logger) Repository {
+	return &repo{
+		db:     db,
+		logger: log.With(logger, "repo", "sql"),
 	}
-
 }
 
 //AllBooks Select all books from db
-func AllBooks() ([]Book, error) {
+func (r *repo) AllBooks(ctx context.Context) ([]Book, error) {
 	const query = `
 		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
 		FROM goapi.books as b
 		JOIN goapi.authors as a
 		ON b.author = a.id;`
 
-	rows, err := db.Query(context.Background(), query)
+	rows, err := r.db.Query(context.Background(), query)
 
 	if err != nil {
 		return nil, err
@@ -63,7 +62,7 @@ func AllBooks() ([]Book, error) {
 }
 
 //CreateBook creates a new book
-func CreateBook(book *Book) error {
+func (r *repo) CreateBook(ctx context.Context, book Book) error {
 	const query = `
 		INSERT INTO goapi.books 
 		(isbn, title, author) 
@@ -80,13 +79,13 @@ func CreateBook(book *Book) error {
 			)
 		);`
 
-	commandTag, err := db.Exec(
+	commandTag, err := r.db.Exec(
 		context.Background(),
 		query,
-		&book.Isbn,
-		&book.Title,
-		&book.Author.Firstname,
-		&book.Author.Lastname,
+		book.Isbn,
+		book.Title,
+		book.Author.Firstname,
+		book.Author.Lastname,
 	)
 
 	if err != nil {
@@ -98,67 +97,67 @@ func CreateBook(book *Book) error {
 	return nil
 }
 
-//GetBook gets single book
-func GetBook(id string) (*Book, error) {
-	const query = `
-		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
-		FROM goapi.books as b
-		JOIN goapi.authors as a
-		ON b.author = a.id
-		WHERE b.id = $1;`
+// //GetBook gets single book
+// func GetBook(id string) (*Book, error) {
+// 	const query = `
+// 		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
+// 		FROM goapi.books as b
+// 		JOIN goapi.authors as a
+// 		ON b.author = a.id
+// 		WHERE b.id = $1;`
 
-	row := db.QueryRow(context.Background(), query, id)
+// 	row := db.QueryRow(context.Background(), query, id)
 
-	var bk Book
+// 	var bk Book
 
-	if err := row.Scan(
-		&bk.ID,
-		&bk.Isbn,
-		&bk.Title,
-		&bk.Author.ID,
-		&bk.Author.Firstname,
-		&bk.Author.Lastname,
-	); err != nil {
-		return nil, err
-	}
+// 	if err := row.Scan(
+// 		&bk.ID,
+// 		&bk.Isbn,
+// 		&bk.Title,
+// 		&bk.Author.ID,
+// 		&bk.Author.Firstname,
+// 		&bk.Author.Lastname,
+// 	); err != nil {
+// 		return nil, err
+// 	}
 
-	return &bk, nil
-}
+// 	return &bk, nil
+// }
 
-// UpdateBook updates book by it's ID
-func UpdateBook(book *Book) error {
-	const query = `
-		UPDATE goapi.books
-		SET isbn = $2, title = $3
-		WHERE
-		id = $1;`
+// // UpdateBook updates book by it's ID
+// func UpdateBook(book *Book) error {
+// 	const query = `
+// 		UPDATE goapi.books
+// 		SET isbn = $2, title = $3
+// 		WHERE
+// 		id = $1;`
 
-	_, err := db.Exec(
-		context.Background(),
-		query,
-		&book.ID,
-		&book.Isbn,
-		&book.Title,
-	)
+// 	_, err := db.Exec(
+// 		context.Background(),
+// 		query,
+// 		&book.ID,
+// 		&book.Isbn,
+// 		&book.Title,
+// 	)
 
-	if err != nil {
-		return err
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-// DeleteBook would delete book by id
-func DeleteBook(id string) error {
-	const query = `
-		DELETE FROM goapi.books
-		WHERE id = $1;`
+// // DeleteBook would delete book by id
+// func DeleteBook(id string) error {
+// 	const query = `
+// 		DELETE FROM goapi.books
+// 		WHERE id = $1;`
 
-	_, err := db.Exec(context.Background(), query, id)
+// 	_, err := db.Exec(context.Background(), query, id)
 
-	if err != nil {
-		return err
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
