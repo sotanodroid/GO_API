@@ -97,8 +97,8 @@ POST api/books
   "isbn":"4545454",
   "title":"Book Three",
   "author": {
-      "firstname":"Harry",
-      "lastname":"White"
+      "firstname":"John",
+      "lastname":"Doe"
     }
 }
 ```

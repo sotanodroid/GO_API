@@ -1,10 +1,10 @@
 .PHONY: migrate
 migrate:
-	docker run --network host migrator:latest -path=/migrations/ -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" up
+	./goose up
 
 .PHONY: drop
 drop:
-	docker run --network host migrator:latest -path=/migrations/ -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" drop
+	./goose down
 
 .PHONY: runserver
 runserver:
