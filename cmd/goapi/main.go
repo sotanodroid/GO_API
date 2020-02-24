@@ -29,6 +29,7 @@ func init() {
 
 func main() {
 	var logger log.Logger
+
 	{
 		logger = log.NewLogfmtLogger(os.Stderr)
 		logger = log.NewSyncLogger(logger)
@@ -45,6 +46,7 @@ func main() {
 	var dbSource = os.Getenv("DB_URL")
 	var db *pgx.Conn
 	ctx := context.Background()
+
 	{
 		var err error
 
@@ -56,6 +58,7 @@ func main() {
 	}
 
 	var srv api.Service
+
 	{
 		repository := models.NewRepo(db, logger)
 		srv = api.NewService(repository, logger)

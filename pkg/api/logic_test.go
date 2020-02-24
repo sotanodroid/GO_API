@@ -1,51 +1,67 @@
 package api
 
-// import (
-// 	"bytes"
-// 	"encoding/json"
-// 	"net/http"
-// 	"net/http/httptest"
-// 	"testing"
+import (
+	"context"
+	"os"
+	"testing"
 
-// 	"github.com/sotanodroid/GO_API/pkg/models"
-// 	"github.com/stretchr/testify/assert"
-// )
+	"github.com/stretchr/testify/assert"
 
-// func init() {
-// 	models.InitDB("postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
-// }
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
+	"github.com/jackc/pgx/v4"
+	"github.com/sotanodroid/GO_API/pkg/models"
+)
 
-// func TestGetRequest(t *testing.T) {
+// Test function to get all books
+func TestGetBooks(t *testing.T) {
+	srv, ctx := setup()
 
-// 	r, _ := http.NewRequest("GET", "/api/books", nil)
-// 	w := httptest.NewRecorder()
+	book, err := srv.GetAllBooks(ctx)
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
 
-// 	getAllBooks(w, r)
+	testBook := []models.Book{}
 
-// 	assert.Equal(t, http.StatusOK, w.Code)
+	assert.IsType(t, testBook, book)
+}
 
-// }
+// Test that book correctly created
+func TestCreateBook(t *testing.T) {
+	srv, ctx := setup()
 
-// func TestCreateBook(t *testing.T) {
-// 	book := models.Book{
-// 		Isbn:  "123459",
-// 		Title: "test Book",
-// 		Author: models.Author{
-// 			Firstname: "John",
-// 			Lastname:  "Doe",
-// 		},
-// 	}
+	author := models.Author{
+		Firstname: "John",
+		Lastname:  "Doe",
+	}
 
-// 	requestByte, _ := json.Marshal(book)
+	resp, err := srv.CreateNewBook(ctx, "12345", "Test Book", author)
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
 
-// 	r, _ := http.NewRequest("POST", "/api/books", bytes.NewReader(requestByte))
-// 	w := httptest.NewRecorder()
+	assert.Equal(t, resp, "Created")
+}
 
-// 	createBook(w, r)
+func setup() (srv Service, ctx context.Context) {
+	var logger log.Logger
+	var dbSource = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+	var db *pgx.Conn
+	ctx = context.Background()
 
-// 	respBook := new(models.Book)
-// 	_ = json.NewDecoder(w.Body).Decode(&respBook)
+	{
+		var err error
 
-// 	assert.Equal(t, http.StatusOK, w.Code)
-// 	assert.Equal(t, book, *respBook)
-// }
+		db, err = pgx.Connect(ctx, dbSource)
+		if err != nil {
+			level.Error(logger).Log("exit", err)
+			os.Exit(-1)
+		}
+	}
+
+	repository := models.NewRepo(db, logger)
+	srv = NewService(repository, logger)
+
+	return NewService(repository, logger), context.Background()
+}

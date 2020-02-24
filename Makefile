@@ -9,3 +9,7 @@ drop:
 .PHONY: runserver
 runserver:
 	go run cmd/goapi/main.go
+
+.PHONY: test
+test:
+	go test ./... -cover

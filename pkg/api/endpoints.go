@@ -27,7 +27,7 @@ type (
 
 	//CreateBookResponse struct
 	CreateBookResponse struct {
-		Ok string `json: ok`
+		Ok string `json:"ok"`
 	}
 )
 
