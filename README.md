@@ -16,9 +16,6 @@ docker-compose up
 ```
 
 ```bash
-# Build migrations container
-docker build -t migrator -f migrator/Dockerfile .
-
 # Run migrations
 make migrate
 ```
@@ -26,8 +23,9 @@ make migrate
 ``` bash
 # Build app
 go build github.com/sotanodroid/GO_API/cmd/goapi
-# Run app
-./goapi
+
+#Or just run pre-built app
+./main
 ```
 
 Server would be awailable on port 8000
