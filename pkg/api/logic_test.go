@@ -46,14 +46,16 @@ func TestCreateBook(t *testing.T) {
 
 func setup() (srv Service, ctx context.Context) {
 	var logger log.Logger
-	var dbSource = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
 	var db *pgx.Conn
 	ctx = context.Background()
 
 	{
 		var err error
 
-		db, err = pgx.Connect(ctx, dbSource)
+		db, err = pgx.Connect(
+			ctx,
+			"postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+		)
 		if err != nil {
 			level.Error(logger).Log("exit", err)
 			os.Exit(-1)
