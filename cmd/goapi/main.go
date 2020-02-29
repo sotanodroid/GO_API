@@ -68,7 +68,7 @@ func main() {
 
 	go func() {
 		c := make(chan os.Signal, 1)
-		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 		errs <- fmt.Errorf("%s", <-c)
 	}()
 

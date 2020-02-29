@@ -38,7 +38,10 @@ type (
 
 	// GetBookResponse returns single book
 	GetBookResponse struct {
-		Book models.Book `json:"book"`
+		ID     int           `json:"id"`
+		Isbn   string        `json:"isbn"`
+		Title  string        `json:"title"`
+		Author models.Author `json:"author"`
 	}
 )
 
@@ -81,7 +84,15 @@ func makeGetBookEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetBookRequest)
 		book, err := s.GetBook(ctx, req.ID)
-		return GetBookResponse{Book: *book}, err
+
+		response := GetBookResponse{
+			ID:     book.ID,
+			Isbn:   book.Isbn,
+			Title:  book.Title,
+			Author: book.Author,
+		}
+
+		return response, err
 	}
 }
 

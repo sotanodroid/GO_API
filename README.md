@@ -25,7 +25,7 @@ make migrate
 go build github.com/sotanodroid/GO_API/cmd/goapi
 
 #Or just run pre-built app
-./main
+./goapi
 ```
 
 Server would be awailable on port 8000
@@ -67,15 +67,13 @@ GET api/books/{id}
 
 # Response
 {
-    "book":{
+    "id":1,
+    "isbn":"153223",
+    "title":"Book_One",
+    "author":{
         "id":1,
-        "isbn":"153223",
-        "title":"Book_One",
-        "author":{
-            "id":1,
-            "firstname":"John",
-            "lastname":"Doe"
-        }
+        "firstname":"John",
+        "lastname":"Doe"
     }
 }
 ```
