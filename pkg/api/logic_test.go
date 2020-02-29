@@ -44,6 +44,19 @@ func TestCreateBook(t *testing.T) {
 	assert.Equal(t, resp, "Created")
 }
 
+func TestGetBook(t *testing.T) {
+	srv, ctx := setup()
+
+	book := models.Book{}
+	resp, err := srv.GetBook(ctx, "1")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+
+	assert.IsType(t, *resp, book)
+
+}
+
 func setup() (srv Service, ctx context.Context) {
 	var logger log.Logger
 	var db *pgx.Conn

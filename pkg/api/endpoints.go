@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/gorilla/mux"
 	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
@@ -29,12 +30,23 @@ type (
 	CreateBookResponse struct {
 		Ok string `json:"ok"`
 	}
+
+	// GetBookRequest gets single book
+	GetBookRequest struct {
+		ID string
+	}
+
+	// GetBookResponse returns single book
+	GetBookResponse struct {
+		Book models.Book `json:"book"`
+	}
 )
 
 //Endpoints holds endpoints
 type Endpoints struct {
 	GetBooks   endpoint.Endpoint
 	CreateBook endpoint.Endpoint
+	GetBook    endpoint.Endpoint
 }
 
 //MakeEndpoints makes endpoints to handle requests
@@ -42,6 +54,7 @@ func MakeEndpoints(s Service) Endpoints {
 	return Endpoints{
 		GetBooks:   makeGetBooksEndpoint(s),
 		CreateBook: makeCreateBooksEndpoints(s),
+		GetBook:    makeGetBookEndpoint(s),
 	}
 }
 
@@ -64,6 +77,14 @@ func makeCreateBooksEndpoints(s Service) endpoint.Endpoint {
 	}
 }
 
+func makeGetBookEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(GetBookRequest)
+		book, err := s.GetBook(ctx, req.ID)
+		return GetBookResponse{Book: *book}, err
+	}
+}
+
 func encodeResponse(ctx context.Context, writter http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(writter).Encode(response)
 }
@@ -77,4 +98,10 @@ func decodeBookRequest(ctx context.Context, request *http.Request) (interface{},
 		return req, nil
 	}
 	return nil, nil
+}
+
+func decodeIDRequest(ctx context.Context, request *http.Request) (interface{}, error) {
+	params := mux.Vars(request)
+
+	return GetBookRequest{ID: params["id"]}, nil
 }

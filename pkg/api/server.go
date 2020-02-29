@@ -31,7 +31,12 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 		encodeResponse,
 	))
 
-	// For methods with /{id} need to create unique decode function
+	r.Methods("GET").Path("/api/books/{id}").Handler(httptransport.NewServer(
+		endpoints.GetBook,
+		decodeIDRequest,
+		encodeResponse,
+	))
+
 	return r
 }
 

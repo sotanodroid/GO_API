@@ -97,32 +97,32 @@ func (r *repo) CreateBook(ctx context.Context, book Book) error {
 	return nil
 }
 
-// //GetBook gets single book
-// func GetBook(id string) (*Book, error) {
-// 	const query = `
-// 		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
-// 		FROM goapi.books as b
-// 		JOIN goapi.authors as a
-// 		ON b.author = a.id
-// 		WHERE b.id = $1;`
+//GetBook gets single book
+func (r *repo) GetBook(ctx context.Context, id string) (*Book, error) {
+	const query = `
+		SELECT b.id, b.Isbn, b.Title, a.id, a.firstname, a.lastname
+		FROM goapi.books as b
+		JOIN goapi.authors as a
+		ON b.author = a.id
+		WHERE b.id = $1;`
 
-// 	row := db.QueryRow(context.Background(), query, id)
+	row := r.db.QueryRow(context.Background(), query, id)
 
-// 	var bk Book
+	var bk Book
 
-// 	if err := row.Scan(
-// 		&bk.ID,
-// 		&bk.Isbn,
-// 		&bk.Title,
-// 		&bk.Author.ID,
-// 		&bk.Author.Firstname,
-// 		&bk.Author.Lastname,
-// 	); err != nil {
-// 		return nil, err
-// 	}
+	if err := row.Scan(
+		&bk.ID,
+		&bk.Isbn,
+		&bk.Title,
+		&bk.Author.ID,
+		&bk.Author.Firstname,
+		&bk.Author.Lastname,
+	); err != nil {
+		return nil, err
+	}
 
-// 	return &bk, nil
-// }
+	return &bk, nil
+}
 
 // // UpdateBook updates book by it's ID
 // func UpdateBook(book *Book) error {

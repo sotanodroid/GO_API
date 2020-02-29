@@ -57,9 +57,18 @@ func (s service) CreateNewBook(
 	return "Created", nil
 }
 
-// 	json.NewEncoder(writer).Encode(book)
+// GetBook gets single book
+func (s service) GetBook(ctx context.Context, id string) (*models.Book, error) {
+	logger := log.With(s.logger, "method", "getBook")
+	book, err := s.repository.GetBook(ctx, id)
 
-// }
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		return nil, err
+	}
+
+	return book, nil
+}
 
 // func getBook(writer http.ResponseWriter, request *http.Request) {
 // 	writer.Header().Set("Content-type", "Application/json")

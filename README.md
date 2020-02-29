@@ -67,13 +67,15 @@ GET api/books/{id}
 
 # Response
 {
-    "id": 1,
-    "isbn": "153223",
-    "title": "Book_One",
-    "author": {
-        "id": 1,
-        "firstname": "John",
-        "lastname": "Doe"
+    "book":{
+        "id":1,
+        "isbn":"153223",
+        "title":"Book_One",
+        "author":{
+            "id":1,
+            "firstname":"John",
+            "lastname":"Doe"
+        }
     }
 }
 ```
