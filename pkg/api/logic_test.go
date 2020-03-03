@@ -92,7 +92,7 @@ func TestUpdateBook(t *testing.T) {
 	assert.Equal(t, book.Title, payload.Title)
 
 	// TODO Использовать фикстуры и тестовую БД
-	srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), oldBook.Isbn, oldBook.Title)
+	_, _ = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), oldBook.Isbn, oldBook.Title)
 
 }
 

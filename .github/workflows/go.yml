@@ -14,7 +14,7 @@ jobs:
       id: go
   
     - name: Get dependencies and prerequisites
-      run: go mod download && cp .env.example .env
+      run: cp .env.example .env
 
     - name: Setup PostgreSQL
       uses: Harmon758/postgresql-action@v1.0.0
