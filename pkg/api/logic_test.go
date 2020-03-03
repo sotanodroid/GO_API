@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -58,15 +59,40 @@ func TestGetBook(t *testing.T) {
 }
 
 func TestUpdateBook(t *testing.T) {
-	// Add request for updated book add assert new values are set
 	srv, ctx := setup()
 
-	resp, err := srv.UpdateBook(ctx, "1", "4545454", "updated Title")
+	payload := struct {
+		Isbn  string
+		Title string
+	}{
+		"123456",
+		"Updated Title",
+	}
+
+	oldBook, err := srv.GetBook(ctx, "1")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+
+	assert.NotEqual(t, oldBook.Isbn, payload.Isbn)
+	assert.NotEqual(t, oldBook.Title, payload.Title)
+
+	resp, err := srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+
+	book, err := srv.GetBook(ctx, "1")
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 
 	assert.Equal(t, resp, "Updated")
+	assert.Equal(t, book.Isbn, payload.Isbn)
+	assert.Equal(t, book.Title, payload.Title)
+
+	// TODO Использовать фикстуры и тестовую БД
+	srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), oldBook.Isbn, oldBook.Title)
 
 }
 
