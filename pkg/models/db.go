@@ -124,28 +124,28 @@ func (r *repo) GetBook(ctx context.Context, id string) (*Book, error) {
 	return &bk, nil
 }
 
-// // UpdateBook updates book by it's ID
-// func UpdateBook(book *Book) error {
-// 	const query = `
-// 		UPDATE goapi.books
-// 		SET isbn = $2, title = $3
-// 		WHERE
-// 		id = $1;`
+// UpdateBook updates book by it's ID
+func (r *repo) UpdateBook(ctx context.Context, id, Isbn, Title string) error {
+	const query = `
+		UPDATE goapi.books
+		SET isbn = $2, title = $3
+		WHERE
+		id = $1;`
 
-// 	_, err := db.Exec(
-// 		context.Background(),
-// 		query,
-// 		&book.ID,
-// 		&book.Isbn,
-// 		&book.Title,
-// 	)
+	_, err := r.db.Exec(
+		context.Background(),
+		query,
+		id,
+		Isbn,
+		Title,
+	)
 
-// 	if err != nil {
-// 		return err
-// 	}
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
 // // DeleteBook would delete book by id
 // func DeleteBook(id string) error {

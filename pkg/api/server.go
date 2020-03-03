@@ -8,9 +8,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// router.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
-// router.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
-
 // NewHTTPServer creates new server to serve endpoints
 func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 	r := mux.NewRouter()
@@ -33,6 +30,14 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 		decodeIDRequest,
 		encodeResponse,
 	))
+
+	r.Methods("PUT").Path("/api/books/{id}").Handler(httptransport.NewServer(
+		endpoints.UpdateBook,
+		decodePutRequest,
+		encodeResponse,
+	))
+
+	// router.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
 
 	return r
 }

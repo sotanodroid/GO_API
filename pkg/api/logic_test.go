@@ -57,6 +57,19 @@ func TestGetBook(t *testing.T) {
 
 }
 
+func TestUpdateBook(t *testing.T) {
+	// Add request for updated book add assert new values are set
+	srv, ctx := setup()
+
+	resp, err := srv.UpdateBook(ctx, "1", "4545454", "updated Title")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+
+	assert.Equal(t, resp, "Updated")
+
+}
+
 func setup() (srv Service, ctx context.Context) {
 	var logger log.Logger
 	var db *pgx.Conn

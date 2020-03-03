@@ -70,33 +70,15 @@ func (s service) GetBook(ctx context.Context, id string) (*models.Book, error) {
 	return book, nil
 }
 
-// func getBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
+func (s service) UpdateBook(ctx context.Context, id, Isbn, Title string) (string, error) {
+	logger := log.With(s.logger, "method", "getBook")
 
-// 	book, err := models.GetBook(params["id"])
+	if err := s.repository.UpdateBook(ctx, id, Isbn, Title); err != nil {
+		level.Error(logger).Log("err", err)
+	}
 
-// 	if err != nil {
-// 		level.Error(logger).Log("err", err)
-// 	}
-
-// 	json.NewEncoder(writer).Encode(book)
-// }
-
-// func updateBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
-// 	book := new(models.Book)
-
-// 	_ = json.NewDecoder(request.Body).Decode(&book)
-// 	book.ID, _ = strconv.Atoi(params["id"])
-
-// 	if err := models.UpdateBook(book); err != nil {
-// 		level.Error(logger).Log("err", err)
-// 	}
-
-// 	json.NewEncoder(writer).Encode(book)
-// }
+	return "Updated", nil
+}
 
 // func deleteBook(writer http.ResponseWriter, request *http.Request) {
 // 	writer.Header().Set("Content-type", "Application/json")
