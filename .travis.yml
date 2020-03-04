@@ -7,7 +7,6 @@ services:
   - postgresql
 
 script:
-- go get github.com/golangci/golangci-lint/cmd/golangci-lint
-- export PATH=$PATH:$(go env GOPATH)/bin && golangci-lint run -D errchec
+- make lint
 - make migrate
 - make test

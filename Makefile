@@ -13,3 +13,7 @@ runserver:
 .PHONY: test
 test:
 	go test ./... -v -covermode=count
+
+.PHONY: lint
+lint:
+	golangci-lint run -D errcheck
