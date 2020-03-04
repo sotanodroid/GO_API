@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sotanodroid/GO_API.svg?branch=master)](https://travis-ci.org/sotanodroid/GO_API)
+
 # Simple GOLang REST API
 
 > Simple RESTful API to create, read, update and delete books.
