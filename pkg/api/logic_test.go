@@ -74,9 +74,14 @@ func setup() (srv Service, ctx context.Context) {
 	{
 		var err error
 
+		dbURL := os.Getenv("DB_URL")
+		if dbURL == "" {
+			dbURL = "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+		}
+
 		db, err = pgx.Connect(
 			ctx,
-			"postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+			dbURL,
 		)
 		if err != nil {
 			level.Error(logger).Log("exit", err)

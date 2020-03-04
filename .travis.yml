@@ -12,6 +12,6 @@ before_script:
 - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 script:
-- docker-compose run db
+- docker-compose up -d
 - make migrate
 - make test
