@@ -14,23 +14,16 @@ import (
 	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
-// Test function to get all books
-func TestGetBooks(t *testing.T) {
+func TestRepository(t *testing.T) {
 	srv, ctx := setup()
 
-	book, err := srv.GetAllBooks(ctx)
-	if err != nil {
-		t.Errorf("Error: %s", err)
+	payload := struct {
+		Isbn  string
+		Title string
+	}{
+		"123456",
+		"Updated Title",
 	}
-
-	testBook := []models.Book{}
-
-	assert.IsType(t, testBook, book)
-}
-
-// Test that book correctly created
-func TestCreateBook(t *testing.T) {
-	srv, ctx := setup()
 
 	author := models.Author{
 		Firstname: "John",
@@ -43,46 +36,23 @@ func TestCreateBook(t *testing.T) {
 	}
 
 	assert.Equal(t, resp, "Created")
-}
 
-func TestGetBook(t *testing.T) {
-	srv, ctx := setup()
-
-	book := models.Book{}
-	resp, err := srv.GetBook(ctx, "1")
+	allBooks, err := srv.GetAllBooks(ctx)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 
-	assert.IsType(t, *resp, book)
-
-}
-
-func TestUpdateBook(t *testing.T) {
-	srv, ctx := setup()
-
-	payload := struct {
-		Isbn  string
-		Title string
-	}{
-		"123456",
-		"Updated Title",
-	}
-
-	oldBook, err := srv.GetBook(ctx, "1")
-	if err != nil {
-		t.Errorf("Error: %s", err)
-	}
+	oldBook := allBooks[len(allBooks)-1]
 
 	assert.NotEqual(t, oldBook.Isbn, payload.Isbn)
 	assert.NotEqual(t, oldBook.Title, payload.Title)
 
-	resp, err := srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
+	resp, err = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 
-	book, err := srv.GetBook(ctx, "1")
+	book, err := srv.GetBook(ctx, strconv.Itoa(oldBook.ID))
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
@@ -91,7 +61,7 @@ func TestUpdateBook(t *testing.T) {
 	assert.Equal(t, book.Isbn, payload.Isbn)
 	assert.Equal(t, book.Title, payload.Title)
 
-	// TODO Использовать фикстуры и тестовую БД
+	// TODO заменить текущую функцию на удаление
 	_, _ = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), oldBook.Isbn, oldBook.Title)
 
 }
