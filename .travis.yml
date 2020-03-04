@@ -7,5 +7,7 @@ services:
   - postgresql
 
 script:
+- go get github.com/golangci/golangci-lint/cmd/golangci-lint
+- make lint
 - make migrate
 - make test

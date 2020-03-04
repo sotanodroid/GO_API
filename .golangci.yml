@@ -1,0 +1,5 @@
+run:
+  tests: false
+
+linters-settings:
+  ignore: fmt:.*,io/ioutil:^Read.*,github.com/go-kit/kit/log.Logger:.*

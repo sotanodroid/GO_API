@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/go-kit/kit v0.10.0
+	github.com/golangci/golangci-lint v1.23.8 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/jackc/pgx/v4 v4.4.0
 	github.com/joho/godotenv v1.3.0

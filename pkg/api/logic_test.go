@@ -90,7 +90,6 @@ func setup() (srv Service, ctx context.Context) {
 	}
 
 	repository := models.NewRepo(db, logger)
-	srv = NewService(repository, logger)
 
 	return NewService(repository, logger), context.Background()
 }
