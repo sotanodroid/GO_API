@@ -6,10 +6,8 @@ go:
 services:
 - docker
 
-postgres:
-  adapter: postgresql
-  database: postgres
-  username: postgres
+services:
+  - postgresql
 
 before_script:
   - "psql -c 'create database postgres;' -U postgres"
