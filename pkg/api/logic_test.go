@@ -17,6 +17,8 @@ import (
 func TestRepository(t *testing.T) {
 	srv, ctx := setup()
 
+	var oldBook models.Book
+
 	payload := struct {
 		Isbn  string
 		Title string
@@ -30,43 +32,51 @@ func TestRepository(t *testing.T) {
 		Lastname:  "Doe",
 	}
 
-	resp, err := srv.CreateNewBook(ctx, "12345", "Test Book", author)
-	if err != nil {
-		t.Errorf("Error CreateNewBook: %s", err)
+	{
+		resp, err := srv.CreateNewBook(ctx, "12345", "Test Book", author)
+		if err != nil {
+			t.Errorf("Error CreateNewBook: %s", err)
+		}
+
+		assert.Equal(t, resp, "Created")
 	}
 
-	assert.Equal(t, resp, "Created")
+	{
+		allBooks, err := srv.GetAllBooks(ctx)
+		if err != nil {
+			t.Errorf("Error GetAllBooks: %s", err)
+		}
 
-	allBooks, err := srv.GetAllBooks(ctx)
-	if err != nil {
-		t.Errorf("Error GetAllBooks: %s", err)
+		oldBook = allBooks[len(allBooks)-1]
+
+		assert.NotEqual(t, oldBook.Isbn, payload.Isbn)
+		assert.NotEqual(t, oldBook.Title, payload.Title)
 	}
 
-	oldBook := allBooks[len(allBooks)-1]
+	{
+		resp, err := srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
+		if err != nil {
+			t.Errorf("Error UpdateBook: %s", err)
+		}
 
-	assert.NotEqual(t, oldBook.Isbn, payload.Isbn)
-	assert.NotEqual(t, oldBook.Title, payload.Title)
+		book, err := srv.GetBook(ctx, strconv.Itoa(oldBook.ID))
+		if err != nil {
+			t.Errorf("Error GetBook: %s", err)
+		}
 
-	resp, err = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
-	if err != nil {
-		t.Errorf("Error UpdateBook: %s", err)
+		assert.Equal(t, resp, "Updated")
+		assert.Equal(t, book.Isbn, payload.Isbn)
+		assert.Equal(t, book.Title, payload.Title)
 	}
 
-	book, err := srv.GetBook(ctx, strconv.Itoa(oldBook.ID))
-	if err != nil {
-		t.Errorf("Error GetBook: %s", err)
+	{
+		resp, err := srv.DeleteBook(ctx, strconv.Itoa(oldBook.ID))
+		if err != nil {
+			t.Errorf("Error DeleteBook: %s", err)
+		}
+
+		assert.Equal(t, resp, "Deleted")
 	}
-
-	assert.Equal(t, resp, "Updated")
-	assert.Equal(t, book.Isbn, payload.Isbn)
-	assert.Equal(t, book.Title, payload.Title)
-
-	resp, err = srv.DeleteBook(ctx, strconv.Itoa(oldBook.ID))
-	if err != nil {
-		t.Errorf("Error DeleteBook: %s", err)
-	}
-
-	assert.Equal(t, resp, "Deleted")
 }
 
 func setup() (srv Service, ctx context.Context) {
