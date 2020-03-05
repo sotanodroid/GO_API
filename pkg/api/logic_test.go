@@ -32,14 +32,14 @@ func TestRepository(t *testing.T) {
 
 	resp, err := srv.CreateNewBook(ctx, "12345", "Test Book", author)
 	if err != nil {
-		t.Errorf("Error: %s", err)
+		t.Errorf("Error CreateNewBook: %s", err)
 	}
 
 	assert.Equal(t, resp, "Created")
 
 	allBooks, err := srv.GetAllBooks(ctx)
 	if err != nil {
-		t.Errorf("Error: %s", err)
+		t.Errorf("Error GetAllBooks: %s", err)
 	}
 
 	oldBook := allBooks[len(allBooks)-1]
@@ -49,21 +49,24 @@ func TestRepository(t *testing.T) {
 
 	resp, err = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
 	if err != nil {
-		t.Errorf("Error: %s", err)
+		t.Errorf("Error UpdateBook: %s", err)
 	}
 
 	book, err := srv.GetBook(ctx, strconv.Itoa(oldBook.ID))
 	if err != nil {
-		t.Errorf("Error: %s", err)
+		t.Errorf("Error GetBook: %s", err)
 	}
 
 	assert.Equal(t, resp, "Updated")
 	assert.Equal(t, book.Isbn, payload.Isbn)
 	assert.Equal(t, book.Title, payload.Title)
 
-	// TODO заменить текущую функцию на удаление
-	_, _ = srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), oldBook.Isbn, oldBook.Title)
+	resp, err = srv.DeleteBook(ctx, strconv.Itoa(oldBook.ID))
+	if err != nil {
+		t.Errorf("Error DeleteBook: %s", err)
+	}
 
+	assert.Equal(t, resp, "Deleted")
 }
 
 func setup() (srv Service, ctx context.Context) {

@@ -26,13 +26,13 @@ type (
 		Author models.Author `json:"author"`
 	}
 
-	//CreateBookResponse struct
-	CreateBookResponse struct {
+	//OkResponse struct
+	OkResponse struct {
 		Ok string `json:"ok"`
 	}
 
-	// GetBookRequest gets single book
-	GetBookRequest struct {
+	// IDRequest gets single book
+	IDRequest struct {
 		ID string
 	}
 
@@ -50,11 +50,6 @@ type (
 		Isbn  string `json:"isbn"`
 		Title string `json:"title"`
 	}
-
-	// UpdateBookResponse response to update book
-	UpdateBookResponse struct {
-		Ok string `json:"ok"`
-	}
 )
 
 //Endpoints holds endpoints
@@ -63,6 +58,7 @@ type Endpoints struct {
 	CreateBook endpoint.Endpoint
 	GetBook    endpoint.Endpoint
 	UpdateBook endpoint.Endpoint
+	DeleteBook endpoint.Endpoint
 }
 
 //MakeEndpoints makes endpoints to handle requests
@@ -72,6 +68,7 @@ func MakeEndpoints(s Service) Endpoints {
 		CreateBook: makeCreateBooksEndpoints(s),
 		GetBook:    makeGetBookEndpoint(s),
 		UpdateBook: makeUpdateBookEndpoint(s),
+		DeleteBook: makeDeleteBookEndpoint(s),
 	}
 }
 
@@ -90,13 +87,13 @@ func makeCreateBooksEndpoints(s Service) endpoint.Endpoint {
 			Lastname:  req.Author.Lastname,
 		}
 		ok, err := s.CreateNewBook(ctx, req.Isbn, req.Title, author)
-		return CreateBookResponse{Ok: ok}, err
+		return OkResponse{Ok: ok}, err
 	}
 }
 
 func makeGetBookEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(GetBookRequest)
+		req := request.(IDRequest)
 		book, err := s.GetBook(ctx, req.ID)
 
 		response := GetBookResponse{
@@ -115,7 +112,18 @@ func makeUpdateBookEndpoint(s Service) endpoint.Endpoint {
 		req := request.(UpdateBookRequest)
 		ok, err := s.UpdateBook(ctx, req.ID, req.Isbn, req.Title)
 
-		response := UpdateBookResponse{Ok: ok}
+		response := OkResponse{Ok: ok}
+
+		return response, err
+	}
+}
+
+func makeDeleteBookEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(IDRequest)
+		ok, err := s.DeleteBook(ctx, req.ID)
+
+		response := OkResponse{Ok: ok}
 
 		return response, err
 	}
@@ -140,7 +148,7 @@ func decodeBookRequest(ctx context.Context, request *http.Request) (interface{},
 func decodeIDRequest(ctx context.Context, request *http.Request) (interface{}, error) {
 	params := mux.Vars(request)
 
-	return GetBookRequest{ID: params["id"]}, nil
+	return IDRequest{ID: params["id"]}, nil
 }
 
 func decodePutRequest(ctx context.Context, request *http.Request) (interface{}, error) {

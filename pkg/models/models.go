@@ -25,4 +25,5 @@ type Repository interface {
 	CreateBook(ctx context.Context, book Book) error
 	GetBook(ctx context.Context, id string) (*Book, error)
 	UpdateBook(ctx context.Context, id, Isbn, Title string) error
+	DeleteBook(ctx context.Context, id string) error
 }

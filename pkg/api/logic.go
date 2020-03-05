@@ -22,7 +22,6 @@ func NewService(rep models.Repository, logger log.Logger) Service {
 	}
 }
 
-// GetAllBooks gets all books
 func (s app) GetAllBooks(ctx context.Context) ([]models.Book, error) {
 	logger := log.With(s.logger, "method", "getAllBooks")
 
@@ -35,7 +34,6 @@ func (s app) GetAllBooks(ctx context.Context) ([]models.Book, error) {
 	return books, nil
 }
 
-// CreateNewBook creates new book
 func (s app) CreateNewBook(
 	ctx context.Context,
 	isbn, title string,
@@ -56,7 +54,6 @@ func (s app) CreateNewBook(
 	return "Created", nil
 }
 
-// GetBook gets single book
 func (s app) GetBook(ctx context.Context, id string) (*models.Book, error) {
 	logger := log.With(s.logger, "method", "getBook")
 	book, err := s.repository.GetBook(ctx, id)
@@ -79,13 +76,12 @@ func (s app) UpdateBook(ctx context.Context, id, Isbn, Title string) (string, er
 	return "Updated", nil
 }
 
-// func deleteBook(writer http.ResponseWriter, request *http.Request) {
-// 	writer.Header().Set("Content-type", "Application/json")
-// 	params := mux.Vars(request)
+func (s app) DeleteBook(ctx context.Context, id string) (string, error) {
+	logger := log.With(s.logger, "method", "DeleteBook")
 
-// 	if err := models.DeleteBook(params["id"]); err != nil {
-// 		level.Error(logger).Log("err", err)
-// 	}
+	if err := s.repository.DeleteBook(ctx, id); err != nil {
+		level.Error(logger).Log("err", err)
+	}
 
-// 	writer.Write([]byte("Deleted"))
-// }
+	return "Deleted", nil
+}

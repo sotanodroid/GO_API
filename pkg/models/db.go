@@ -147,17 +147,17 @@ func (r *repo) UpdateBook(ctx context.Context, id, Isbn, Title string) error {
 	return nil
 }
 
-// // DeleteBook would delete book by id
-// func DeleteBook(id string) error {
-// 	const query = `
-// 		DELETE FROM goapi.books
-// 		WHERE id = $1;`
+// DeleteBook would delete book by id
+func (r *repo) DeleteBook(ctx context.Context, id string) error {
+	const query = `
+		DELETE FROM goapi.books
+		WHERE id = $1;`
 
-// 	_, err := db.Exec(context.Background(), query, id)
+	_, err := r.db.Exec(context.Background(), query, id)
 
-// 	if err != nil {
-// 		return err
-// 	}
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
