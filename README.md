@@ -30,7 +30,7 @@ go build github.com/sotanodroid/GO_API/cmd/goapi
 ./goapi
 ```
 
-Server would be awailable on port 8000
+Server would be available on port 8000
 
 ## Endpoints
 
