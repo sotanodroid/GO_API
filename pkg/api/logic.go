@@ -9,22 +9,21 @@ import (
 	"github.com/sotanodroid/GO_API/pkg/models"
 )
 
-// Service of microservice
-type service struct {
+type app struct {
 	repository models.Repository
 	logger     log.Logger
 }
 
 // NewService returns new instance of servise
 func NewService(rep models.Repository, logger log.Logger) Service {
-	return &service{
+	return &app{
 		repository: rep,
 		logger:     logger,
 	}
 }
 
 // GetAllBooks gets all books
-func (s service) GetAllBooks(ctx context.Context) ([]models.Book, error) {
+func (s app) GetAllBooks(ctx context.Context) ([]models.Book, error) {
 	logger := log.With(s.logger, "method", "getAllBooks")
 
 	books, err := s.repository.AllBooks(ctx)
@@ -37,7 +36,7 @@ func (s service) GetAllBooks(ctx context.Context) ([]models.Book, error) {
 }
 
 // CreateNewBook creates new book
-func (s service) CreateNewBook(
+func (s app) CreateNewBook(
 	ctx context.Context,
 	isbn, title string,
 	author models.Author,
@@ -58,7 +57,7 @@ func (s service) CreateNewBook(
 }
 
 // GetBook gets single book
-func (s service) GetBook(ctx context.Context, id string) (*models.Book, error) {
+func (s app) GetBook(ctx context.Context, id string) (*models.Book, error) {
 	logger := log.With(s.logger, "method", "getBook")
 	book, err := s.repository.GetBook(ctx, id)
 
@@ -70,7 +69,7 @@ func (s service) GetBook(ctx context.Context, id string) (*models.Book, error) {
 	return book, nil
 }
 
-func (s service) UpdateBook(ctx context.Context, id, Isbn, Title string) (string, error) {
+func (s app) UpdateBook(ctx context.Context, id, Isbn, Title string) (string, error) {
 	logger := log.With(s.logger, "method", "getBook")
 
 	if err := s.repository.UpdateBook(ctx, id, Isbn, Title); err != nil {
