@@ -30,7 +30,7 @@ func (r *repo) AllBooks(ctx context.Context) ([]Book, error) {
 		JOIN goapi.authors as a
 		ON b.author = a.id;`
 
-	rows, err := r.db.Query(context.Background(), query)
+	rows, err := r.db.Query(ctx, query)
 
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (r *repo) CreateBook(ctx context.Context, book Book) error {
 		);`
 
 	commandTag, err := r.db.Exec(
-		context.Background(),
+		ctx,
 		query,
 		book.Isbn,
 		book.Title,
@@ -106,7 +106,7 @@ func (r *repo) GetBook(ctx context.Context, id string) (*Book, error) {
 		ON b.author = a.id
 		WHERE b.id = $1;`
 
-	row := r.db.QueryRow(context.Background(), query, id)
+	row := r.db.QueryRow(ctx, query, id)
 
 	var bk Book
 
@@ -133,7 +133,7 @@ func (r *repo) UpdateBook(ctx context.Context, id, Isbn, Title string) error {
 		id = $1;`
 
 	_, err := r.db.Exec(
-		context.Background(),
+		ctx,
 		query,
 		id,
 		Isbn,
@@ -153,7 +153,7 @@ func (r *repo) DeleteBook(ctx context.Context, id string) error {
 		DELETE FROM goapi.books
 		WHERE id = $1;`
 
-	_, err := r.db.Exec(context.Background(), query, id)
+	_, err := r.db.Exec(ctx, query, id)
 
 	if err != nil {
 		return err
