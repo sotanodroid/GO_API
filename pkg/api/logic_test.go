@@ -54,7 +54,12 @@ func TestRepository(t *testing.T) {
 	}
 
 	{
-		resp, err := srv.UpdateBook(ctx, strconv.Itoa(oldBook.ID), payload.Isbn, payload.Title)
+		resp, err := srv.UpdateBook(
+			ctx,
+			strconv.Itoa(oldBook.ID),
+			payload.Isbn,
+			payload.Title,
+		)
 		if err != nil {
 			t.Errorf("Error UpdateBook: %s", err)
 		}

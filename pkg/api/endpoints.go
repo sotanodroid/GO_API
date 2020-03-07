@@ -75,6 +75,7 @@ func MakeEndpoints(s Service) Endpoints {
 func makeGetBooksEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		books, err := s.GetAllBooks(ctx)
+
 		return GetBooksResponse{Books: books}, err
 	}
 }
@@ -87,6 +88,7 @@ func makeCreateBooksEndpoints(s Service) endpoint.Endpoint {
 			Lastname:  req.Author.Lastname,
 		}
 		ok, err := s.CreateNewBook(ctx, req.Isbn, req.Title, author)
+
 		return OkResponse{Ok: ok}, err
 	}
 }
@@ -142,6 +144,7 @@ func decodeBookRequest(ctx context.Context, request *http.Request) (interface{},
 		}
 		return req, nil
 	}
+
 	return nil, nil
 }
 
@@ -163,5 +166,6 @@ func decodePutRequest(ctx context.Context, request *http.Request) (interface{}, 
 
 		return req, nil
 	}
+
 	return nil, nil
 }

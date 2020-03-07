@@ -8,16 +8,16 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"github.com/sotanodroid/GO_API/pkg/models"
-
+	"github.com/sotanodroid/GO_API/configs"
 	"github.com/sotanodroid/GO_API/pkg/api"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/jackc/pgx/v4"
 
 	"github.com/go-kit/kit/log"
-
-	"github.com/joho/godotenv"
+	"github.com/joeshaw/envdecode"
 )
 
 func init() {
@@ -43,14 +43,19 @@ func main() {
 	level.Info(logger).Log("msg", "Starting App...")
 	defer level.Info(logger).Log("msg", "App stopped")
 
-	var dbSource = os.Getenv("DB_URL")
+	var cfg configs.Config
+	if err := envdecode.Decode(&cfg); err != nil {
+		level.Error(logger).Log("exit", err)
+		os.Exit(-1)
+	}
+
 	var db *pgx.Conn
 	ctx := context.Background()
 
 	{
 		var err error
 
-		db, err = pgx.Connect(ctx, dbSource)
+		db, err = pgx.Connect(ctx, cfg.DbSource)
 		if err != nil {
 			level.Error(logger).Log("exit", err)
 			os.Exit(-1)
@@ -76,7 +81,7 @@ func main() {
 
 	go func() {
 		handler := api.NewHTTPServer(ctx, endpoints)
-		errs <- http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+		errs <- http.ListenAndServe(":"+cfg.Port, handler)
 	}()
 
 	level.Error(logger).Log("exit", <-errs)
