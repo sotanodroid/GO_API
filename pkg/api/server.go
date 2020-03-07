@@ -39,7 +39,7 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 
 	r.Methods("DELETE").Path("/api/books/{id}").Handler(httptransport.NewServer(
 		endpoints.DeleteBook,
-		decodePutRequest,
+		decodeIDRequest,
 		encodeResponse,
 	))
 
