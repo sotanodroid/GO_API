@@ -11,3 +11,12 @@ script:
 - make lint
 - make migrate
 - make test
+
+after_success:
+  - |
+    go test ./... -coverprofile cover.out
+    go tool cover -func cover.out | grep total | awk '{print substr($3, 1, length($3)-1)}' | xargs -I {} curl \
+      --header "Authorization: Token ${TOKEN}" \
+      --data value="{}" \
+      --data sha="${TRAVIS_COMMIT}" \
+      https://seriesci.com/api/repos/:owner/:repo/:series/values
