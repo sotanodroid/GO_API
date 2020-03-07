@@ -9,9 +9,9 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
-	"github.com/sotanodroid/GO_API/pkg/models"
 	"github.com/sotanodroid/GO_API/configs"
 	"github.com/sotanodroid/GO_API/pkg/api"
+	"github.com/sotanodroid/GO_API/pkg/models"
 
 	"github.com/go-kit/kit/log/level"
 	"github.com/jackc/pgx/v4"
