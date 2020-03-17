@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sotanodroid/GO_API.svg?branch=master)](https://travis-ci.org/sotanodroid/GO_API) [![reliability rating](https://sonarcloud.io/api/project_badges/measure?project=sotanodroid_GO_API&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=sotanodroid_GO_API) [![security rating](https://sonarcloud.io/api/project_badges/measure?project=sotanodroid_GO_API&metric=security_rating)](https://sonarcloud.io/dashboard?id=sotanodroid_GO_API)
+[![Build Status](https://travis-ci.org/sotanodroid/GO_API.svg?branch=master)](https://travis-ci.org/sotanodroid/GO_API) [![codecov](https://codecov.io/gh/sotanodroid/GO_API/branch/master/graph/badge.svg)](https://codecov.io/gh/sotanodroid/GO_API) [![reliability rating](https://sonarcloud.io/api/project_badges/measure?project=sotanodroid_GO_API&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=sotanodroid_GO_API) [![security rating](https://sonarcloud.io/api/project_badges/measure?project=sotanodroid_GO_API&metric=security_rating)](https://sonarcloud.io/dashboard?id=sotanodroid_GO_API)
 
 # Simple GOLang REST API
 
