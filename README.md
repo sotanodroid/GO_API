@@ -27,7 +27,7 @@ make migrate
 go build github.com/sotanodroid/GO_API/cmd/goapi
 
 #Or just run pre-built app
-./goapi
+./main
 ```
 
 Server would be available on port 8000
@@ -117,7 +117,6 @@ PUT api/books/{id}
 
 #### Tests:
 
-Start DataBase in Docker container, run migrations.
 ``` bash
-go test ./... -v
+make test
 ```
